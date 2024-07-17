@@ -37,6 +37,7 @@ namespace AfisolProject.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AddContactDTO>> GetTblContact(int id)
         {
+
             var tblContact = await _context.TblContacts.FindAsync(id);
 
             if (tblContact == null)
@@ -44,7 +45,6 @@ namespace AfisolProject.Controllers
                 return NotFound();
             }
 
-            
             var contactDto = new AddContactDTO
             {
                 ContactId = tblContact.ContactId,
@@ -63,27 +63,30 @@ namespace AfisolProject.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] AddContactDTO contactDto)
         {
+
+            var tblContact = await _context.TblContacts.FindAsync(id);
+
+            if (tblContact == null)
+            {
+                return NotFound();
+            }
+
+            // Map the DTO to the entity
+            tblContact.Name = contactDto.Name;
+            tblContact.Address = contactDto.Address;
+            tblContact.Tel = contactDto.Tel;
+            tblContact.Mobile = contactDto.Mobile;
+            tblContact.Email = contactDto.Email;
+            tblContact.CountryId = contactDto.CountryId;
+
             try
             {
-                var tblContact = await _context.TblContacts.FindAsync(id);
-
-                if (tblContact == null)
-                {
-                    return NotFound();
-                }
-
-               
-                tblContact.Name = contactDto.Name;
-                tblContact.Address = contactDto.Address;
-                tblContact.Tel = contactDto.Tel;
-                tblContact.Mobile = contactDto.Mobile;
-                tblContact.Email = contactDto.Email;
-                tblContact.CountryId = contactDto.CountryId;
-
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return Ok();
-
-               
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return StatusCode(409, ex.Message);
             }
             catch (Exception ex)
             {
@@ -111,7 +114,7 @@ namespace AfisolProject.Controllers
                 _context.SaveChanges();
                 return Ok();
 
-                
+
             }
             catch (Exception ex)
             {

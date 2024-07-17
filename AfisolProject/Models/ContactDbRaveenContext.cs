@@ -27,7 +27,7 @@ public partial class ContactDbRaveenContext : DbContext
     {
         modelBuilder.Entity<TblContact>(entity =>
         {
-            entity.HasKey(e => e.ContactId).HasName("PK__tblConta__5C6625BB832C14F9");
+            entity.HasKey(e => e.ContactId).HasName("PK__tmp_ms_x__5C6625BB2328CCE5");
 
             entity.ToTable("tblContacts");
 
@@ -51,7 +51,7 @@ public partial class ContactDbRaveenContext : DbContext
 
             entity.HasOne(d => d.Country).WithMany(p => p.TblContacts)
                 .HasForeignKey(d => d.CountryId)
-                .HasConstraintName("FK__tblContac__Count__3F466844");
+                .HasConstraintName("FK__tblContac__Count__44FF419A");
         });
 
         modelBuilder.Entity<TblCountry>(entity =>
